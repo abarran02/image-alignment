@@ -1,8 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "movableimage.h"
+
 #include <QMainWindow>
-#include "SelectableImage.h"
 
 
 QT_BEGIN_NAMESPACE

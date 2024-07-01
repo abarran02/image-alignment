@@ -17,8 +17,8 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
-        selectableimage.h
-        selectableimage.cpp
+        movableimage.h
+        movableimage.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
