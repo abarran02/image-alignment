@@ -25,17 +25,7 @@ MainWindow::~MainWindow() {
 void MainWindow::openImage() {
     QString fileName = QFileDialog::getOpenFileName(this, "Open Image File", "", "Images (*.png *.xpm *.jpg *.jpeg *.bmp *.gif)");
     if (!fileName.isEmpty()) {
-        QPixmap pixmap(fileName);  // load file
-
         // create image widget and adjust to pixmap size
-        MovableImage* image = new MovableImage(this);
-        image->setFixedSize(pixmap.size());
-        image->setPixmap(pixmap);
-        image->setFocusPolicy(Qt::ClickFocus);
-        image->move(QPoint(0, 0));
-
-        // render widget
-        image->setParent(centralWidget());
-        image->show();
+        MovableImage* image = new MovableImage(centralWidget(), fileName);
     }
 }
