@@ -20,9 +20,11 @@ public:
 private slots:
     void openImage();
     void openDir();
+    void generateGrid();
 
 private:
     Ui::MainWindow* ui;
+    std::vector<MovableImage*> images;
 };
 
 #endif // MAINWINDOW_H

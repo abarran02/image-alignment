@@ -19,6 +19,8 @@ public:
     void incrementOpacity(double step);
     void decrementOpacity(double step);
 
+    bool operator<(const MovableImage& cmp) const;
+
 protected:
     void keyPressEvent(QKeyEvent* event);
     void focusInEvent(QFocusEvent* event);

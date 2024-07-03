@@ -137,3 +137,7 @@ void MovableImage::mouseMoveEvent(QMouseEvent* event) {
         event->ignore();
     }
 }
+
+bool MovableImage::operator<(const MovableImage& cmp) const {
+    return x() < cmp.x();
+}
