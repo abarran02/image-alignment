@@ -8,6 +8,7 @@ MovableImage::MovableImage(QWidget* parent, QString filename)
 {
     setParent(parent);
     loadPixmap(filename);
+    setMouseTracking(true);
 }
 
 void MovableImage::loadPixmap(QString filename) {
@@ -45,11 +46,15 @@ void MovableImage::setOpacity(double newOpacity) {
 void MovableImage::incrementOpacity(double step) {
     double newOpacity = opacity + step;
     setOpacity(newOpacity > 1.0 ? 1.0 : newOpacity);
+
+    opacityIsDefault = opacity == 1.0;
 }
 
 void MovableImage::decrementOpacity(double step) {
     double newOpacity = opacity - step;
     setOpacity(newOpacity < 0.1 ? 0.1 : newOpacity);
+
+    opacityIsDefault = false;
 }
 
 void MovableImage::keyPressEvent(QKeyEvent* event) {
@@ -94,4 +99,41 @@ void MovableImage::focusInEvent(QFocusEvent* event) {
 
 void MovableImage::focusOutEvent(QFocusEvent* event) {
     setStyleSheet("");
+}
+
+void MovableImage::mousePressEvent(QMouseEvent* event) {
+    if (event->button() == Qt::LeftButton) {
+        grabMouse();
+        mouseGrabPoint = event->globalPos();
+        imageGrabPoint = pos();
+            
+        raise();
+        if (opacityIsDefault)
+            setOpacity(0.7);
+    }
+    else {
+        event->ignore();
+    }
+}
+
+void MovableImage::mouseReleaseEvent(QMouseEvent* event) {
+    if (event->button() == Qt::LeftButton) {
+        releaseMouse();
+
+        if (opacityIsDefault)
+            setOpacity(1.0);
+    }
+    else {
+        event->ignore();
+    }
+}
+
+void MovableImage::mouseMoveEvent(QMouseEvent* event) {
+    if (hasFocus() && event->buttons() & Qt::LeftButton) {
+        QPoint difference = event->globalPos() - mouseGrabPoint;
+        move(imageGrabPoint + difference);
+    }
+    else {
+        event->ignore();
+    }
 }
