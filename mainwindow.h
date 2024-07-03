@@ -19,6 +19,7 @@ public:
 
 private slots:
     void openImage();
+    void openDir();
 
 private:
     Ui::MainWindow* ui;

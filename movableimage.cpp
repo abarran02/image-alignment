@@ -3,18 +3,24 @@
 #include <QPainter>
 
 
-MovableImage::MovableImage(QWidget* parent, QString filename) {
+MovableImage::MovableImage(QWidget* parent, QString filename)
+    : filename(filename)
+{
     setParent(parent);
     loadPixmap(filename);
-    original = pixmap()->copy();
 }
 
 void MovableImage::loadPixmap(QString filename) {
     QPixmap pixmap(filename);  // load file
 
+    // save image and thumbnail
+    QSize size(200, 200);
+    original = pixmap;
+    thumbnail = pixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
     // create image widget and adjust to pixmap size
-    setFixedSize(pixmap.size());
-    setPixmap(pixmap);
+    setFixedSize(thumbnail.size());
+    setPixmap(thumbnail);
     setFocusPolicy(Qt::ClickFocus);
     move(QPoint(0, 0));
 
@@ -24,13 +30,13 @@ void MovableImage::loadPixmap(QString filename) {
 void MovableImage::setOpacity(double newOpacity) {
     opacity = newOpacity;
 
-    QPixmap result(original.size());
+    QPixmap result(thumbnail.size());
     result.fill(Qt::transparent);
 
     QPainter painter;
     painter.begin(&result);
     painter.setOpacity(opacity);
-    painter.drawPixmap(0, 0, original);
+    painter.drawPixmap(0, 0, thumbnail);
     painter.end();
 
     setPixmap(result);
@@ -83,9 +89,9 @@ void MovableImage::keyPressEvent(QKeyEvent* event) {
 }
 
 void MovableImage::focusInEvent(QFocusEvent* event) {
-    this->setStyleSheet("border: 1px solid red");
+    setStyleSheet("border: 1px solid red");
 }
 
 void MovableImage::focusOutEvent(QFocusEvent* event) {
-    this->setStyleSheet("");
+    setStyleSheet("");
 }

@@ -9,13 +9,18 @@
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
-    // create menu bar actions 
+    // create menu bar
     QMenu* fileMenu = menuBar()->addMenu("File");
-    QAction* openAction = new QAction("Open Image", this);
-    fileMenu->addAction(openAction);
 
-    // connect the open action to the openImage slot
-    connect(openAction, &QAction::triggered, this, &MainWindow::openImage);
+    // create menu bar actions 
+    QAction* openImage = new QAction("Open Image", this);
+    fileMenu->addAction(openImage);
+    connect(openImage, &QAction::triggered, this, &MainWindow::openImage);  // connect to openImage slot
+
+    // repeat for openDir
+    QAction* openDir = new QAction("Open Image Directory", this);
+    fileMenu->addAction(openDir);
+    connect(openDir, &QAction::triggered, this, &MainWindow::openDir);
 }
 
 MainWindow::~MainWindow() {
@@ -23,9 +28,26 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::openImage() {
-    QString fileName = QFileDialog::getOpenFileName(this, "Open Image File", "", "Images (*.png *.xpm *.jpg *.jpeg *.bmp *.gif)");
+    QString fileName = QFileDialog::getOpenFileName(this, "Open Image File", "", "Images (*.png *.jpg *.jpeg *.tif)");
     if (!fileName.isEmpty()) {
-        // create image widget and adjust to pixmap size
         MovableImage* image = new MovableImage(centralWidget(), fileName);
+    }
+}
+
+void MainWindow::openDir() {
+    QString directory = QFileDialog::getExistingDirectory(this, "Open Image Directory", QString(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    if (!directory.isEmpty()) {
+        // get images in selected directory
+        QDir dir(directory);
+        QStringList filters;
+        filters << "*.png" << "*.jpg" << "*.jpeg" << "*.tif";
+        dir.setNameFilters(filters);
+        dir.setFilter(QDir::Files);
+
+        // load each image
+        QFileInfoList fileList = dir.entryInfoList();
+        foreach(const QFileInfo& fileInfo, fileList) {
+            MovableImage* image = new MovableImage(centralWidget(), fileInfo.absoluteFilePath());
+        }
     }
 }

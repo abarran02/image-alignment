@@ -23,7 +23,9 @@ protected:
     void focusOutEvent(QFocusEvent* event);
 
 private:
+    QString filename;
     QPixmap original;
+    QPixmap thumbnail;
     double opacity = 1.0;
 };
 
