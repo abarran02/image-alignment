@@ -13,15 +13,17 @@ class Preferences : public QDialog {
 public:
     Preferences(QWidget* parent = nullptr);
 
+    int thumbnailSize = 200;
+    int tolerance = 100;
+
 private slots:
     void accept();
     void reject();
 
 private:
+    QLineEdit* thumbnailSizeEdit;
+    QLineEdit* toleranceEdit;
     QDialogButtonBox* buttonBox;
-    QLabel* label;
-    QLabel* label_2;
-    QLineEdit* thumbnailSize;
 };
 
 #endif // PREFERENCES_H

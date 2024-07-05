@@ -14,32 +14,51 @@ Preferences::Preferences(QWidget* parent) : QDialog(parent) {
     connect(buttonBox, &QDialogButtonBox::rejected, this, &Preferences::reject);
 
     // thumbnail size line edit
-    label = new QLabel("Thumbnail size:", this);
-    thumbnailSize = new QLineEdit(this);
-    thumbnailSize->setAlignment(Qt::AlignRight | Qt::AlignTrailing | Qt::AlignVCenter);
-    thumbnailSize->setPlaceholderText("200");
-    thumbnailSize->setValidator(new QIntValidator(1, 10000, this));
-    label_2 = new QLabel("px", this);
+    QLabel* thumbailSizeLabel = new QLabel("Thumbnail size:", this);
+    thumbnailSizeEdit = new QLineEdit(this);
+    thumbnailSizeEdit->setAlignment(Qt::AlignRight | Qt::AlignTrailing | Qt::AlignVCenter);
+    thumbnailSizeEdit->setPlaceholderText("200");
+    thumbnailSizeEdit->setToolTip("Square size of thumbnails generated and displayed from loaded files");
+    thumbnailSizeEdit->setValidator(new QIntValidator(1, 10000, this));
+
+    // tolerance
+    QLabel* toleranceLabel = new QLabel("Tolerance:", this);
+    toleranceEdit = new QLineEdit(this);
+    toleranceEdit->setAlignment(Qt::AlignRight | Qt::AlignTrailing | Qt::AlignVCenter);
+    toleranceEdit->setPlaceholderText("100");
+    toleranceEdit->setToolTip("Row tolerance when generating image grid coordinates. Recommended to be less than or equal to 50% of the thumbnail size.");
+    toleranceEdit->setValidator(new QIntValidator(1, 10000, this));
 
     // layouts
-    QHBoxLayout* inputLayout = new QHBoxLayout;
-    inputLayout->addWidget(label);
-    inputLayout->addWidget(thumbnailSize);
-    inputLayout->addWidget(label_2);
+    QHBoxLayout* thumbnailLayout = new QHBoxLayout;
+    thumbnailLayout->addWidget(thumbailSizeLabel);
+    thumbnailLayout->addWidget(thumbnailSizeEdit);
+    thumbnailLayout->addWidget(new QLabel("px", this));
+
+    QHBoxLayout* toleranceLayout = new QHBoxLayout;
+    toleranceLayout->addWidget(toleranceLabel);
+    toleranceLayout->addWidget(toleranceEdit);
+    toleranceLayout->addWidget(new QLabel("px", this));
 
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
-    mainLayout->addLayout(inputLayout);
+    mainLayout->addLayout(thumbnailLayout);
+    mainLayout->addLayout(toleranceLayout);
     mainLayout->addWidget(buttonBox);
 
     setLayout(mainLayout);
 }
 
-void Preferences::accept()
-{
+void Preferences::accept() {
+    bool ok;
+    if (!thumbnailSizeEdit->text().isEmpty())
+        thumbnailSize = thumbnailSizeEdit->text().toInt(&ok);
+
+    if (!toleranceEdit->text().isEmpty())
+        tolerance = toleranceEdit->text().toInt(&ok);
+
     QDialog::accept();
 }
 
-void Preferences::reject()
-{
+void Preferences::reject() {
     QDialog::reject();
 }

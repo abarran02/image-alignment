@@ -6,7 +6,7 @@
 #include <QMenuBar>
 
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), preferences(nullptr) {
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), preferences(new Preferences(this)) {
     // create menu bar
     QMenuBar* menuBar = new QMenuBar(this);
     QMenu* fileMenu = new QMenu("File", this);
@@ -58,7 +58,7 @@ void MainWindow::openDir() {
         // load each image
         QFileInfoList fileList = dir.entryInfoList();
         foreach(const QFileInfo& fileInfo, fileList) {
-            MovableImage* image = new MovableImage(centralWidget(), fileInfo.absoluteFilePath());
+            MovableImage* image = new MovableImage(centralWidget(), fileInfo.absoluteFilePath(), preferences->thumbnailSize);
             images.push_back(image);
         }
     }
@@ -69,7 +69,7 @@ void MainWindow::generateGrid() {
         return;
 
     std::vector<std::vector<MovableImage*>> rows = { { images[0] } };
-    int tolerance = 100;
+    int tolerance = preferences->tolerance;
 
     // iterate over images 1...
     for (int img = 1; img < images.size(); img++) {
@@ -101,10 +101,6 @@ void MainWindow::generateGrid() {
 }
 
 void MainWindow::openPreferences() {
-    if (!preferences) {
-        preferences = new Preferences(this);
-    }
-
     preferences->show();
     preferences->raise();
     preferences->activateWindow();
