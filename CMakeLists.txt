@@ -16,9 +16,10 @@ set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
         mainwindow.h
-        mainwindow.ui
         movableimage.h
         movableimage.cpp
+        preferences.cpp
+        preferences.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

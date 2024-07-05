@@ -3,8 +3,8 @@
 #include <QPainter>
 
 
-MovableImage::MovableImage(QWidget* parent, QString filename)
-    : filename(filename)
+MovableImage::MovableImage(QWidget* parent, QString filename, int thumbnailSize)
+    : filename(filename), thumbnailSize(thumbnailSize)
 {
     setParent(parent);
     loadPixmap(filename);
@@ -15,7 +15,7 @@ void MovableImage::loadPixmap(QString filename) {
     QPixmap pixmap(filename);  // load file
 
     // save image and thumbnail
-    QSize size(200, 200);
+    QSize size(thumbnailSize, thumbnailSize);
     original = pixmap;
     thumbnail = pixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 

@@ -11,7 +11,7 @@ class MovableImage : public QLabel {
     Q_OBJECT
 
 public:
-    explicit MovableImage(QWidget* parent = nullptr, QString filename = "");
+    explicit MovableImage(QWidget* parent = nullptr, QString filename = "", int thumbnailSize = 200);
     
     void loadPixmap(QString filename);
 
@@ -20,6 +20,10 @@ public:
     void decrementOpacity(double step);
 
     bool operator<(const MovableImage& cmp) const;
+
+    int thumbnailSize;
+    double opacity = 1.0;
+    bool opacityIsDefault = true;
 
 protected:
     void keyPressEvent(QKeyEvent* event);
@@ -37,9 +41,6 @@ private:
 
     QPoint mouseGrabPoint;
     QPoint imageGrabPoint;
-
-    double opacity = 1.0;
-    bool opacityIsDefault = true;
 };
 
 #endif // MOVABLEIMAGE_H

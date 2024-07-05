@@ -1,35 +1,40 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 
 #include <QFileDialog>
 #include <QPixmap>
 #include <QPoint>
+#include <QMenuBar>
 
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
-    ui->setupUi(this);
-
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), preferences(new Preferences(this)) {
     // create menu bar
-    QMenu* fileMenu = menuBar()->addMenu("File");
+    QMenuBar* menuBar = new QMenuBar(this);
+    QMenu* fileMenu = new QMenu("File", this);
+    menuBar->addMenu(fileMenu);
 
-    // create menu bar actions 
-    QAction* openImage = new QAction("Open Image", this);
-    fileMenu->addAction(openImage);
-    connect(openImage, &QAction::triggered, this, &MainWindow::openImage);  // connect to openImage slot
+    // add menu options
+    createAction(fileMenu, "Open Image", SLOT(openImage()));
+    createAction(fileMenu, "Open Image Directory", SLOT(openDir()));
+    createAction(fileMenu, "Generate Grid", SLOT(generateGrid()));
+    createAction(fileMenu, "Preferences", SLOT(openPreferences()));
 
-    // repeat for openDir
-    QAction* openDir = new QAction("Open Image Directory", this);
-    fileMenu->addAction(openDir);
-    connect(openDir, &QAction::triggered, this, &MainWindow::openDir);
+    setMenuBar(menuBar);
 
-    // repeat for generateGrid
-    QAction* generateGrid = new QAction("Generate Grid", this);
-    fileMenu->addAction(generateGrid);
-    connect(generateGrid, &QAction::triggered, this, &MainWindow::generateGrid);
+    // create central widget
+    QWidget* centralWidget = new QWidget(this);
+    setCentralWidget(centralWidget);
+
+    resize(640, 480);
 }
 
 MainWindow::~MainWindow() {
-    delete ui;
+    delete preferences;
+}
+
+void MainWindow::createAction(QMenu* menu, const QString& text, const char* member) {
+    QAction* action = new QAction(text, this);
+    menu->addAction(action);
+    connect(action, SIGNAL(triggered()), this, member);
 }
 
 void MainWindow::openImage() {
@@ -53,7 +58,7 @@ void MainWindow::openDir() {
         // load each image
         QFileInfoList fileList = dir.entryInfoList();
         foreach(const QFileInfo& fileInfo, fileList) {
-            MovableImage* image = new MovableImage(centralWidget(), fileInfo.absoluteFilePath());
+            MovableImage* image = new MovableImage(centralWidget(), fileInfo.absoluteFilePath(), preferences->thumbnailSize);
             images.push_back(image);
         }
     }
@@ -64,7 +69,7 @@ void MainWindow::generateGrid() {
         return;
 
     std::vector<std::vector<MovableImage*>> rows = { { images[0] } };
-    int tolerance = 100;
+    int tolerance = preferences->tolerance;
 
     // iterate over images 1...
     for (int img = 1; img < images.size(); img++) {
@@ -93,4 +98,10 @@ void MainWindow::generateGrid() {
         [](std::vector<MovableImage*> a, std::vector<MovableImage*> b) { return a[0] < b[0]; });
 
     // need to decide some output acceptable by the other application
+}
+
+void MainWindow::openPreferences() {
+    preferences->show();
+    preferences->raise();
+    preferences->activateWindow();
 }
