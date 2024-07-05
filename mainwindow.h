@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "movableimage.h"
+#include "preferences.h"
 
 #include <QMainWindow>
 
@@ -21,10 +22,12 @@ private slots:
     void openImage();
     void openDir();
     void generateGrid();
+    void openPreferences();
 
 private:
     Ui::MainWindow* ui;
     std::vector<MovableImage*> images;
+    Preferences* preferences;
 };
 
 #endif // MAINWINDOW_H

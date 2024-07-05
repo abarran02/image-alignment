@@ -6,7 +6,7 @@
 #include <QPoint>
 
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow), preferences(nullptr) {
     ui->setupUi(this);
 
     // create menu bar
@@ -26,10 +26,16 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
     QAction* generateGrid = new QAction("Generate Grid", this);
     fileMenu->addAction(generateGrid);
     connect(generateGrid, &QAction::triggered, this, &MainWindow::generateGrid);
+
+    // repeat for openPreferences
+    QAction* openPreferences = new QAction("Preferences", this);
+    fileMenu->addAction(openPreferences);
+    connect(openPreferences, &QAction::triggered, this, &MainWindow::openPreferences);
 }
 
 MainWindow::~MainWindow() {
     delete ui;
+    delete preferences;
 }
 
 void MainWindow::openImage() {
@@ -93,4 +99,14 @@ void MainWindow::generateGrid() {
         [](std::vector<MovableImage*> a, std::vector<MovableImage*> b) { return a[0] < b[0]; });
 
     // need to decide some output acceptable by the other application
+}
+
+void MainWindow::openPreferences() {
+    if (!preferences) {
+        preferences = new Preferences(this);
+    }
+
+    preferences->show();
+    preferences->raise();
+    preferences->activateWindow();
 }
