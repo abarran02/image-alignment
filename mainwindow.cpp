@@ -4,7 +4,6 @@
 #include <QFileDialog>
 #include <QPixmap>
 #include <QPoint>
-#include <QDebug>
 
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -85,9 +84,13 @@ void MainWindow::generateGrid() {
     }
 
     // sort images in each row by x-coordinate
-    for (auto& row : rows) {
-        std::sort(row.begin(), row.end());
+    for (std::vector< MovableImage*> row : rows) {
+        std::stable_sort(row.begin(), row.end(),[](MovableImage* a, MovableImage* b) { return *a < *b; });
     }
+
+    // sort rows by y-coordinate
+    std::sort(rows.begin(), rows.end(),
+        [](std::vector<MovableImage*> a, std::vector<MovableImage*> b) { return a[0] < b[0]; });
 
     // need to decide some output acceptable by the other application
 }
