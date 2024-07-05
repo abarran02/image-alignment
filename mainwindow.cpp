@@ -1,41 +1,40 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 
 #include <QFileDialog>
 #include <QPixmap>
 #include <QPoint>
+#include <QMenuBar>
 
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow), preferences(nullptr) {
-    ui->setupUi(this);
-
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), preferences(nullptr) {
     // create menu bar
-    QMenu* fileMenu = menuBar()->addMenu("File");
+    QMenuBar* menuBar = new QMenuBar(this);
+    QMenu* fileMenu = new QMenu("File", this);
+    menuBar->addMenu(fileMenu);
 
-    // create menu bar actions 
-    QAction* openImage = new QAction("Open Image", this);
-    fileMenu->addAction(openImage);
-    connect(openImage, &QAction::triggered, this, &MainWindow::openImage);  // connect to openImage slot
+    // add menu options
+    createAction(fileMenu, "Open Image", SLOT(openImage()));
+    createAction(fileMenu, "Open Image Directory", SLOT(openDir()));
+    createAction(fileMenu, "Generate Grid", SLOT(generateGrid()));
+    createAction(fileMenu, "Preferences", SLOT(openPreferences()));
 
-    // repeat for openDir
-    QAction* openDir = new QAction("Open Image Directory", this);
-    fileMenu->addAction(openDir);
-    connect(openDir, &QAction::triggered, this, &MainWindow::openDir);
+    setMenuBar(menuBar);
 
-    // repeat for generateGrid
-    QAction* generateGrid = new QAction("Generate Grid", this);
-    fileMenu->addAction(generateGrid);
-    connect(generateGrid, &QAction::triggered, this, &MainWindow::generateGrid);
+    // create central widget
+    QWidget* centralWidget = new QWidget(this);
+    setCentralWidget(centralWidget);
 
-    // repeat for openPreferences
-    QAction* openPreferences = new QAction("Preferences", this);
-    fileMenu->addAction(openPreferences);
-    connect(openPreferences, &QAction::triggered, this, &MainWindow::openPreferences);
+    resize(640, 480);
 }
 
 MainWindow::~MainWindow() {
-    delete ui;
     delete preferences;
+}
+
+void MainWindow::createAction(QMenu* menu, const QString& text, const char* member) {
+    QAction* action = new QAction(text, this);
+    menu->addAction(action);
+    connect(action, SIGNAL(triggered()), this, member);
 }
 
 void MainWindow::openImage() {

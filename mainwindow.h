@@ -7,10 +7,6 @@
 #include <QMainWindow>
 
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
-
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -25,7 +21,8 @@ private slots:
     void openPreferences();
 
 private:
-    Ui::MainWindow* ui;
+    void createAction(QMenu* menu, const QString& text, const char* member);
+
     std::vector<MovableImage*> images;
     Preferences* preferences;
 };
