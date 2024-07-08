@@ -12,15 +12,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
-set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        movableimage.h
-        movableimage.cpp
-        preferences.cpp
-        preferences.h
+# collect source and header files
+file(GLOB PROJECT_SOURCES
+    "src/*.c*"
+    "include/*.h"
 )
+
+set(project_includes 
+    "include"
+)
+
+include_directories(${project_includes})
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ImageAlignment
