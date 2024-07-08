@@ -105,3 +105,16 @@ void MainWindow::openPreferences() {
     preferences->raise();
     preferences->activateWindow();
 }
+
+void MainWindow::keyPressEvent(QKeyEvent* event) {
+    if (event->key() == Qt::Key_Delete) {
+        QWidget* fw = focusWidget();
+
+        // remove widget from images vector
+        auto it = std::remove(images.begin(), images.end(), fw);
+        images.erase(it, images.end());
+
+        // deallocate image
+        delete fw;
+    }
+}

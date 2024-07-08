@@ -58,19 +58,23 @@ void MovableImage::decrementOpacity(double step) {
 }
 
 void MovableImage::keyPressEvent(QKeyEvent* event) {
-    int step = 10;
+    int step = 2;
 
     switch (event->key()) {
     case Qt::Key_Left:
+    case Qt::Key_A:
         move(x() - step, y());
         break;
     case Qt::Key_Right:
+    case Qt::Key_D:
         move(x() + step, y());
         break;
     case Qt::Key_Up:
+    case Qt::Key_W:
         move(x(), y() - step);
         break;
     case Qt::Key_Down:
+    case Qt::Key_S:
         move(x(), y() + step);
         break;
     case Qt::Key_Z:
@@ -84,9 +88,6 @@ void MovableImage::keyPressEvent(QKeyEvent* event) {
         break;
     case Qt::Key_M:
         incrementOpacity(0.1);
-        break;
-    case Qt::Key_Delete:
-        delete this;
         break;
     default:
         QLabel::keyPressEvent(event); // Pass other keys to base class
