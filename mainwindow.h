@@ -5,6 +5,7 @@
 #include "preferences.h"
 
 #include <QMainWindow>
+#include <QKeyEvent>
 
 
 class MainWindow : public QMainWindow {
@@ -19,6 +20,9 @@ private slots:
     void openDir();
     void generateGrid();
     void openPreferences();
+
+protected:
+    void keyPressEvent(QKeyEvent* event);
 
 private:
     void createAction(QMenu* menu, const QString& text, const char* member);

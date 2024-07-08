@@ -85,9 +85,6 @@ void MovableImage::keyPressEvent(QKeyEvent* event) {
     case Qt::Key_M:
         incrementOpacity(0.1);
         break;
-    case Qt::Key_Delete:
-        delete this;
-        break;
     default:
         QLabel::keyPressEvent(event); // Pass other keys to base class
     }
