@@ -20,6 +20,7 @@ private slots:
     void openDir();
     void generateGrid();
     void openPreferences();
+    void setBorderPreference();
 
 protected:
     void keyPressEvent(QKeyEvent* event);

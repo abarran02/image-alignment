@@ -5,6 +5,7 @@
 #include <QDialogButtonBox>
 #include <QLabel>
 #include <QLineEdit>
+#include <QCheckbox>
 
 
 class Preferences : public QDialog {
@@ -15,6 +16,7 @@ public:
 
     int thumbnailSize = 200;
     int tolerance = 100;
+    bool drawBorder = true;
 
 private slots:
     void accept();
@@ -23,6 +25,7 @@ private slots:
 private:
     QLineEdit* thumbnailSizeEdit;
     QLineEdit* toleranceEdit;
+    QCheckBox* borderCheckbox;
     QDialogButtonBox* buttonBox;
 };
 
