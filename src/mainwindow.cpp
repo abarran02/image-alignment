@@ -20,6 +20,8 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), preferences(new P
 
     setMenuBar(menuBar);
 
+    connect(preferences, &Preferences::accepted, this, &MainWindow::setBorderPreference);
+
     // create central widget
     QWidget* centralWidget = new QWidget(this);
     setCentralWidget(centralWidget);
@@ -40,7 +42,8 @@ void MainWindow::createAction(QMenu* menu, const QString& text, const char* memb
 void MainWindow::openImage() {
     QString fileName = QFileDialog::getOpenFileName(this, "Open Image File", "", "Images (*.png *.jpg *.jpeg *.tif)");
     if (!fileName.isEmpty()) {
-        MovableImage* image = new MovableImage(centralWidget(), fileName);
+        MovableImage* image = new MovableImage(centralWidget(), fileName, preferences->thumbnailSize);
+        image->drawBorder = preferences->drawBorder;
         images.push_back(image);
     }
 }
@@ -59,6 +62,7 @@ void MainWindow::openDir() {
         QFileInfoList fileList = dir.entryInfoList();
         foreach(const QFileInfo& fileInfo, fileList) {
             MovableImage* image = new MovableImage(centralWidget(), fileInfo.absoluteFilePath(), preferences->thumbnailSize);
+            image->drawBorder = preferences->drawBorder;
             images.push_back(image);
         }
     }
@@ -116,5 +120,11 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
 
         // deallocate image
         delete fw;
+    }
+}
+
+void MainWindow::setBorderPreference() {
+    for (MovableImage* img : images) {
+        img->drawBorder = preferences->drawBorder;
     }
 }

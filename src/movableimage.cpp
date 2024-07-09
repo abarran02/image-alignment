@@ -38,6 +38,15 @@ void MovableImage::setOpacity(double newOpacity) {
     painter.begin(&result);
     painter.setOpacity(opacity);
     painter.drawPixmap(0, 0, thumbnail);
+
+    // draw 1px red border if in focus
+    // won't resize image like with setStyleSheet()
+    if (hasFocus() && drawBorder) {
+        QPen pen(Qt::red, 1);
+        painter.setPen(pen);
+        painter.drawRect(0, 0, width() - 1, height() - 1);
+    }
+
     painter.end();
 
     setPixmap(result);
@@ -94,12 +103,8 @@ void MovableImage::keyPressEvent(QKeyEvent* event) {
     }
 }
 
-void MovableImage::focusInEvent(QFocusEvent* event) {
-    setStyleSheet("border: 1px solid red");
-}
-
 void MovableImage::focusOutEvent(QFocusEvent* event) {
-    setStyleSheet("");
+    setOpacity(opacity);  // force redraw without red border
 }
 
 void MovableImage::mousePressEvent(QMouseEvent* event) {

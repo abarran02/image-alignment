@@ -24,10 +24,10 @@ public:
     int thumbnailSize;
     double opacity = 1.0;
     bool opacityIsDefault = true;
+    bool drawBorder = true;
 
 protected:
     void keyPressEvent(QKeyEvent* event);
-    void focusInEvent(QFocusEvent* event);
     void focusOutEvent(QFocusEvent* event);
 
     void mouseMoveEvent(QMouseEvent* event);
