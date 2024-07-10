@@ -13,7 +13,7 @@ class MovableImage : public QLabel {
 public:
     explicit MovableImage(QWidget* parent = nullptr, QString filename = "", int thumbnailSize = 200);
     
-    void loadPixmap(QString filename);
+    std::string getFilename();
 
     void setOpacity(double opacity);
     void incrementOpacity(double step);
@@ -27,6 +27,8 @@ public:
     bool drawBorder = true;
 
 protected:
+    void loadPixmap(QString filename);
+
     void keyPressEvent(QKeyEvent* event);
     void focusOutEvent(QFocusEvent* event);
 

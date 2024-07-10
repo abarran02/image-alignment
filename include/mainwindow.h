@@ -3,6 +3,7 @@
 
 #include "movableimage.h"
 #include "preferences.h"
+#include "gridimg.h"
 
 #include <QMainWindow>
 #include <QKeyEvent>
@@ -18,9 +19,10 @@ public:
 private slots:
     void openImage();
     void openDir();
-    void generateGrid();
     void openPreferences();
     void setBorderPreference();
+
+    std::vector<GridImg> generateGrid();
 
 protected:
     void keyPressEvent(QKeyEvent* event);

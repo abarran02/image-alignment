@@ -28,6 +28,10 @@ void MovableImage::loadPixmap(QString filename) {
     show();  // render widget
 }
 
+std::string MovableImage::getFilename() {
+    return filename.toStdString();
+}
+
 void MovableImage::setOpacity(double newOpacity) {
     opacity = newOpacity;
 

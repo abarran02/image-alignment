@@ -68,9 +68,11 @@ void MainWindow::openDir() {
     }
 }
 
-void MainWindow::generateGrid() {
+std::vector<GridImg> MainWindow::generateGrid() {
+    std::vector<GridImg> gridPositions;
+
     if (images.empty())
-        return;
+        return gridPositions;
 
     std::vector<std::vector<MovableImage*>> rows = { { images[0] } };
     int tolerance = preferences->tolerance;
@@ -93,15 +95,26 @@ void MainWindow::generateGrid() {
     }
 
     // sort images in each row by x-coordinate
-    for (std::vector< MovableImage*> row : rows) {
+    for (std::vector< MovableImage*> row : rows)
         std::stable_sort(row.begin(), row.end(),[](MovableImage* a, MovableImage* b) { return *a < *b; });
-    }
 
     // sort rows by y-coordinate
     std::sort(rows.begin(), rows.end(),
         [](std::vector<MovableImage*> a, std::vector<MovableImage*> b) { return a[0] < b[0]; });
 
-    // need to decide some output acceptable by the other application
+    // place images into structs defining grid (x,y)
+    for (int row = 0; row < rows.size(); row++) {
+        for (int col = 0; col < rows[row].size(); col++) {
+            GridImg pos = {
+                rows[row][col]->getFilename(),
+                row,
+                col
+            };
+            gridPositions.push_back(pos);
+        }
+    }
+
+    return gridPositions;
 }
 
 void MainWindow::openPreferences() {
