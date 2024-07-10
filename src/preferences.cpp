@@ -4,7 +4,10 @@
 #include <QVBoxLayout>
 
 
-Preferences::Preferences(QWidget* parent) : QDialog(parent), thumbnailSize(defaultThumbnailSize), tolerance(defaultTolerance) {
+Preferences::Preferences(QWidget* parent) : QDialog(parent) {
+    thumbnailSize = defaultThumbnailSize;
+    tolerance = defaultTolerance;
+
     setWindowTitle("Preferences");
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
     setLayout(mainLayout);
